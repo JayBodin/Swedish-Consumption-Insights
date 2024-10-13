@@ -63,4 +63,4 @@ print("Month to Value Mapping:")
 for month, values in combined_month_value_map.items():
     kpi_value = values.get("000004VT")  # KPI value
     yearly_change_value = values.get("000004VV")  # Yearly change value
-    print(f"{month}: KPI: {kpi_value}, Yearly Change: {yearly_change_value}")
+    print(f"{month}: KPI: {kpi_value}, Inflationsnivå: {yearly_change_value}%")
