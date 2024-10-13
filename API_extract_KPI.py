@@ -1,6 +1,4 @@
 import requests
-import json
-import pandas as pd
 
 # Define the API endpoint
 url = 'https://api.scb.se/OV0104/v1/doris/sv/ssd/PR/PR0101/PR0101A/KPItotM'
@@ -10,7 +8,10 @@ start_year = 2013
 end_year = 2023
 
 # List of ContentsCode to test individually, including the code for annual change
-contents_codes = ["000004VV"]  # Only include the code for annual changes
+contents_codes = ["000004VV", "000004VT"]  # KPI and annual change codes
+
+# Dictionary to hold combined month-value mappings
+combined_month_value_map = {}
 
 for code in contents_codes:
     # Prepare the JSON payload for the specified years and single ContentsCode
@@ -36,33 +37,30 @@ for code in contents_codes:
         }
     }
 
-    # Print the payload
-    #print(f"Payload for ContentsCode {code}:")
-    #print(json.dumps(payload, indent=2, ensure_ascii=False))
-
     # Make a POST request to fetch the data
     response = requests.post(url, json=payload)
 
     # Check if request was successful
     if response.status_code == 200:
         # Parse the JSON response
-
         data = response.json()
         dimensions = data['dimension']
         tids = dimensions['Tid']['category']['index']
         values = data['value']
 
         # Create a mapping of months to their respective values
-        month_value_map = {}
-        
         for month_code, index in tids.items():
-            month_value_map[month_code] = values[index]
-
-        # Print the mapping
-        print("Month to Value Mapping:")
-        for month, value in month_value_map.items():
-            print(f"{month}: {value}")
+            if month_code not in combined_month_value_map:
+                combined_month_value_map[month_code] = {}
+            combined_month_value_map[month_code][code] = values[index]
 
     else:
         print(f"Error for ContentsCode {code}: {response.status_code}")
         print(response.text)  # Print response text for further debugging
+
+# Print the combined month to value mapping
+print("Month to Value Mapping:")
+for month, values in combined_month_value_map.items():
+    kpi_value = values.get("000004VT")  # KPI value
+    yearly_change_value = values.get("000004VV")  # Yearly change value
+    print(f"{month}: KPI: {kpi_value}, Inflationsnivå: {yearly_change_value}%")
