@@ -10,7 +10,6 @@ start_year = 2013
 end_year = 2023
 
 # List of ContentsCode to test individually, including the code for annual change
-contents_codes = ["000004VV"]  # Only include the code for annual changes
 
 for code in contents_codes:
     # Prepare the JSON payload for the specified years and single ContentsCode

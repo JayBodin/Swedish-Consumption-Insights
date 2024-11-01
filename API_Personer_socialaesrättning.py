@@ -1,7 +1,7 @@
 import requests
 
 # Define the API endpoint
-url = 'https://api.scb.se/OV0104/v1/doris/sv/ssd/NR/nr0001/'
+url = 'https://api.scb.se/OV0104/v1/doris/sv/ssd/HE/he0000/HE0000T01N'
 # Make a GET request to fetch metadata
 response = requests.get(url)
 
